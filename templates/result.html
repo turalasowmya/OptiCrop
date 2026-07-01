@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OptiCrop - Recommendation Result</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-dark navbar-expand" style="background-color:#2e7d32;">
+  <div class="container">
+    <a class="navbar-brand mb-0 h1" href="/">🌾 OptiCrop</a>
+    <div class="navbar-nav">
+      <a class="nav-link text-white" href="/">Recommend</a>
+      <a class="nav-link text-white" href="/suitability">Suitability Check</a>
+      <a class="nav-link text-white" href="/research">Research</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7">
+
+      <div class="card text-center">
+        <div class="card-header">Recommendation Result</div>
+        <div class="card-body p-5">
+          <p class="text-muted mb-2">Based on your soil and climate inputs, the best crop to grow is:</p>
+          <div class="result-crop mb-3">{{ crop }}</div>
+
+          {% if top_predictions %}
+          <hr>
+          <p class="text-muted mb-2">Top matches:</p>
+          <ul class="list-group list-group-flush mb-3">
+            {% for name, prob in top_predictions %}
+            <li class="list-group-item d-flex justify-content-between">
+              <span>{{ name.capitalize() }}</span>
+              <span class="fw-bold">{{ prob }}%</span>
+            </li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+
+          <hr>
+          <p class="text-muted small">
+            Input used &mdash; N: {{ inputs.N }}, P: {{ inputs.P }}, K: {{ inputs.K }},
+            Temp: {{ inputs.temperature }}°C, Humidity: {{ inputs.humidity }}%,
+            pH: {{ inputs.ph }}, Rainfall: {{ inputs.rainfall }}mm
+          </p>
+
+          <a href="/" class="btn btn-success mt-3">Try Another</a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

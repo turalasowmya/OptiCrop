@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OptiCrop - Research & Policy Planning</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar navbar-dark navbar-expand" style="background-color:#2e7d32;">
+  <div class="container">
+    <a class="navbar-brand mb-0 h1" href="/">🌾 OptiCrop</a>
+    <div class="navbar-nav">
+      <a class="nav-link text-white" href="/">Recommend</a>
+      <a class="nav-link text-white" href="/suitability">Suitability Check</a>
+      <a class="nav-link text-white fw-bold" href="/research">Research</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container py-5">
+
+  <div class="text-center mb-5">
+    <h2 class="fw-bold" style="color:#2e7d32;">Agricultural Research & Policy Planning</h2>
+    <p class="text-muted">Pattern analysis across {{ total_crops }} crops and {{ total_samples }} field samples to support evidence-based agricultural strategy.</p>
+  </div>
+
+  <div class="row g-4 mb-4">
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-header">Feature Correlation</div>
+        <div class="card-body text-center">
+          <img src="{{ url_for('static', filename='images/correlation_heatmap.png') }}"
+               class="img-fluid rounded" alt="Correlation heatmap">
+          <p class="text-muted small mt-2">
+            Shows how soil nutrients and climate factors relate to each other across all samples,
+            useful for identifying which conditions tend to co-occur.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card h-100">
+        <div class="card-header">Crop Clusters by Environmental Needs (K-Means)</div>
+        <div class="card-body text-center">
+          <img src="{{ url_for('static', filename='images/crop_clusters_pca.png') }}"
+               class="img-fluid rounded" alt="Crop clusters">
+          <p class="text-muted small mt-2">
+            Crops grouped by similar N, P, K, temperature, humidity, pH, and rainfall needs,
+            projected into 2D using PCA.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mb-4">
+    <div class="card-header">Cluster Groupings</div>
+    <div class="card-body">
+      <div class="row g-3">
+        {% for cluster_id, crops in clusters.items() %}
+        <div class="col-md-3">
+          <div class="border rounded p-3 h-100">
+            <h6 class="fw-bold" style="color:#2e7d32;">Cluster {{ cluster_id }}</h6>
+            <ul class="mb-0 small">
+              {% for c in crops %}
+              <li>{{ c.capitalize() }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Average Environmental Profile per Cluster</div>
+    <div class="card-body p-0">
+      <table class="table mb-0">
+        <thead>
+          <tr>
+            <th>Cluster</th>
+            <th>N</th>
+            <th>P</th>
+            <th>K</th>
+            <th>Temperature (°C)</th>
+            <th>Humidity (%)</th>
+            <th>pH</th>
+            <th>Rainfall (mm)</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in profile %}
+          <tr>
+            <td>{{ row.cluster }}</td>
+            <td>{{ row.N }}</td>
+            <td>{{ row.P }}</td>
+            <td>{{ row.K }}</td>
+            <td>{{ row.temperature }}</td>
+            <td>{{ row.humidity }}</td>
+            <td>{{ row.ph }}</td>
+            <td>{{ row.rainfall }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer class="text-center mt-4">
+    Generated from K-Means clustering and correlation analysis on the OptiCrop dataset.
+  </footer>
+
+</div>
+
+</body>
+</html>
